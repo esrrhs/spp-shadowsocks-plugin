@@ -2,7 +2,17 @@
 [spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
 
 # 编译
-## Java环境
+## 编译到非Android平台
+```
+# go build
+```
+## 或者其他平台
+```
+# ./pack.sh
+```
+
+## 编译到Android平台
+### Java环境
 * 下载Java，解压到某个目录
 ```
 # wget http://javadl.oracle.com/webapps/download/AutoDL?BundleId=225345_090f390dda5b47b9b721c7dfaa008135 -O  jre-8u144-linux-x64.tar.gz
@@ -21,7 +31,7 @@ export PATH=$PATH:$JAVA_HOME/bin
 # source ~/.bashrc
 ```
 
-## Android SDK环境
+### Android SDK环境
 * 在官方网站下载Command line tools only工具，[地址](https://developer.android.com/studio/#downloads)
 ```
 # mkdir -p /home/project/android/cmdline-tools
@@ -43,7 +53,7 @@ export ANDROID_SDK_ROOT=/home/project/android
 # ./tools/bin/sdkmanager  "build-tools;28.0.3"  "platform-tools"  "platforms;android-28"
 ```
 
-## Android NDK环境
+### Android NDK环境
 * 在官方网站下载NDK，[地址](https://developer.android.com/ndk/downloads/index.html)
 ```
 # wget https://dl.google.com/android/repository/android-ndk-r21b-linux-x86_64.zip
@@ -59,10 +69,10 @@ export ANDROID_NDK_HOME=/home/project/android-ndk/android-ndk-r21b
 # source ~/.bashrc
 ```
 
-## 编译插件
-* 编译spp-shadowsocks-plugin
+### 编译插件
+* 编译spp-shadowsocks-plugin到Android各个架构，使用./pack_android.sh
 ```
-# go build
+# ./pack_android.sh
 ```
 
 # 使用
