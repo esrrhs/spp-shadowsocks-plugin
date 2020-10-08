@@ -85,8 +85,6 @@ func parseArgs() Args {
 }
 
 func main() {
-	opts := parseArgs()
-
 	loggo.Ini(loggo.Config{
 		Level:     loggo.LEVEL_INFO,
 		Prefix:    "spp",
@@ -94,6 +92,8 @@ func main() {
 		NoLogFile: true,
 		NoPrint:   false,
 	})
+
+	opts := parseArgs()
 
 	config := proxy.DefaultConfig()
 	ss := reflect.ValueOf(config).Elem()
