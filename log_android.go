@@ -34,7 +34,7 @@ import (
 )
 
 var (
-	ctag = C.CString("kcptun")
+	ctag = C.CString("spp")
 )
 
 type infoWriter struct{}

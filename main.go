@@ -76,7 +76,7 @@ func main() {
 					}
 				} else if ss.Field(i).Kind() == reflect.String {
 					ss.Field(i).SetString(value)
-					log.Printf("%v = %v", name, value[0])
+					log.Printf("%v = %v", name, value)
 				} else if ss.Field(i).Kind() == reflect.Bool {
 					x := value == "true"
 					ss.Field(i).SetBool(x)
