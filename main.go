@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"github.com/esrrhs/go-engine/src/common"
 	"github.com/esrrhs/go-engine/src/loggo"
@@ -85,6 +86,28 @@ func parseArgs() Args {
 }
 
 func main() {
+
+	usage := ""
+
+	config := proxy.DefaultConfig()
+	ss := reflect.ValueOf(config).Elem()
+	typeOfT := ss.Type()
+	for i := 0; i < ss.NumField(); i++ {
+		name := typeOfT.Field(i).Name
+		if ss.Field(i).Kind() == reflect.Int {
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).Int())
+		} else if ss.Field(i).Kind() == reflect.String {
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).String())
+		} else if ss.Field(i).Kind() == reflect.Bool {
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).Bool())
+		}
+	}
+
+	flag.Usage = func() {
+		fmt.Printf(usage)
+	}
+	flag.Parse()
+
 	loggo.Ini(loggo.Config{
 		Level:     loggo.LEVEL_INFO,
 		Prefix:    "spp",
@@ -94,10 +117,6 @@ func main() {
 	})
 
 	opts := parseArgs()
-
-	config := proxy.DefaultConfig()
-	ss := reflect.ValueOf(config).Elem()
-	typeOfT := ss.Type()
 
 	for i := 0; i < ss.NumField(); i++ {
 		name := typeOfT.Field(i).Name
@@ -113,9 +132,9 @@ func main() {
 				ss.Field(i).SetString(value[0])
 				loggo.Info("%v = %v", name, value[0])
 			} else if ss.Field(i).Kind() == reflect.Bool {
-				x, _ := strconv.Atoi(value[0])
-				ss.Field(i).SetBool(x > 0)
-				loggo.Info("%v = %v", name, x > 0)
+				x := value[0] == "true"
+				ss.Field(i).SetBool(x)
+				loggo.Info("%v = %v", name, x)
 			}
 		}
 	}
