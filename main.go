@@ -15,10 +15,6 @@ import (
 )
 
 func main() {
-	log_init()
-
-	log.Printf("start plugin")
-
 	loggo.Ini(loggo.Config{
 		Level:     loggo.LEVEL_ERROR,
 		Prefix:    "spp",
@@ -35,11 +31,11 @@ func main() {
 	for i := 0; i < ss.NumField(); i++ {
 		name := typeOfT.Field(i).Name
 		if ss.Field(i).Kind() == reflect.Int {
-			usage += fmt.Sprintf("%v = %v", strings.ToLower(name), ss.Field(i).Int())
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).Int())
 		} else if ss.Field(i).Kind() == reflect.String {
-			usage += fmt.Sprintf("%v = %v", strings.ToLower(name), ss.Field(i).String())
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).String())
 		} else if ss.Field(i).Kind() == reflect.Bool {
-			usage += fmt.Sprintf("%v = %v", strings.ToLower(name), ss.Field(i).Bool())
+			usage += fmt.Sprintf("%v = %v\n", strings.ToLower(name), ss.Field(i).Bool())
 		}
 	}
 
@@ -47,8 +43,12 @@ func main() {
 		fmt.Printf(usage)
 	}
 	v := flag.Bool("V", false, "")
-	log.Printf("parse args")
 	flag.Parse()
+
+	log_init()
+
+	log.Printf("start plugin")
+
 	log.Printf("vpn mode %v", *v)
 
 	log.Printf("parse env")
