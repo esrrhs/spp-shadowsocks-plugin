@@ -86,6 +86,7 @@ export ANDROID_NDK_HOME=/home/project/android-ndk-r21b
 ```
 
 # 使用
+### 非Android平台
 * 下载shadowsocks的go版本[go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) 然后解压，放到和spp-shadowsocks-plugin同级目录
 ```
 # gunzip shadowsocks2-linux.gz
@@ -112,3 +113,5 @@ The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
 ```
+### Android平台
+* 使用shadowsocks插件
