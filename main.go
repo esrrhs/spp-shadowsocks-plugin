@@ -33,7 +33,7 @@ func main() {
 	flag.Usage = func() {
 		fmt.Println(usage)
 	}
-	v := flag.Bool("V", false, "")
+	vpn := flag.Bool("V", false, "")
 	flag.Parse()
 
 	loggo.Ini(loggo.Config{
@@ -48,7 +48,7 @@ func main() {
 
 	loggo.Info("start plugin")
 
-	loggo.Info("vpn mode %v", *v)
+	loggo.Info("vpn mode %v", *vpn)
 
 	loggo.Info("parse env")
 	opts, err := parseEnv()
@@ -92,6 +92,10 @@ func main() {
 		protos = append(protos, "tcp")
 	}
 	loggo.Info("protos %v", protos)
+
+	if *vpn {
+		registerControlFunc()
+	}
 
 	go parentMonitor(3)
 
