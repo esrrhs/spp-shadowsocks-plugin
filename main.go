@@ -16,7 +16,7 @@ import (
 
 func main() {
 	loggo.Ini(loggo.Config{
-		Level:     loggo.LEVEL_ERROR,
+		Level:     loggo.LEVEL_INFO,
 		Prefix:    "spp",
 		MaxDay:    3,
 		NoLogFile: true,
@@ -92,6 +92,7 @@ func main() {
 	} else {
 		protos = append(protos, "tcp")
 	}
+	log.Printf("protos %v", protos)
 
 	go parentMonitor(3)
 
