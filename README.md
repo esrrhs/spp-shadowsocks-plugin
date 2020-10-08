@@ -72,7 +72,7 @@ export ANDROID_SDK_ROOT=/home/project/android
 ```
 * 设置环境变量，修改～/.bashrc
 ```
-export ANDROID_NDK_HOME=/home/project/android-ndk/android-ndk-r21b
+export ANDROID_NDK_HOME=/home/project/android-ndk-r21b
 ```
 * 然后让它生效
 ```
