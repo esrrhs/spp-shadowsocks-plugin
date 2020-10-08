@@ -1,6 +1,16 @@
 # spp-shadowsocks-plugin
 [spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
-
+```
+     +------------+                    +---------------------------+
+     |  SS Client +-- Local Loopback --+  Plugin Client (Tunnel)   +--+
+     +------------+                    +---------------------------+  |
+                                                                      |
+                 Public Internet (Obfuscated/Transformed traffic) ==> |
+                                                                      |
+     +------------+                    +---------------------------+  |
+     |  SS Server +-- Local Loopback --+  Plugin Server (Tunnel)   +--+
+     +------------+                    +---------------------------+
+```
 # 编译
 ## 编译到非Android平台
 ```
