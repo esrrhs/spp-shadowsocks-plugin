@@ -1,14 +1,95 @@
 # spp-shadowsocks-plugin
 [spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
-
-# 使用
-* 下载shadowsocks的go版本[go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) 然后解压
 ```
-# gunzip shadowsocks2-linux.gz
+     +------------+                    +---------------------------+
+     |  SS Client +-- Local Loopback --+  Plugin Client (Tunnel)   +--+
+     +------------+                    +---------------------------+  |
+                                                                      |
+                 Public Internet (Obfuscated/Transformed traffic) ==> |
+                                                                      |
+     +------------+                    +---------------------------+  |
+     |  SS Server +-- Local Loopback --+  Plugin Server (Tunnel)   +--+
+     +------------+                    +---------------------------+
 ```
-* 编译spp-shadowsocks-plugin，放到和shadowsocks2-linux同级目录
+# 编译
+### 编译到非Android平台
 ```
 # go build
+```
+### 或者其他平台
+```
+# ./pack.sh
+```
+
+### 编译到Android平台
+#### Java环境
+* 下载Java，解压到某个目录
+```
+# wget http://javadl.oracle.com/webapps/download/AutoDL?BundleId=225345_090f390dda5b47b9b721c7dfaa008135 -O  jre-8u144-linux-x64.tar.gz
+# tar zxvf jre-8u144-linux-x64.tar.gz
+# mkdir -p /home/project/
+# mv jre1.8.0_144 /home/project/
+```
+* 设置环境变量，修改～/.bashrc
+```
+export JAVA_HOME=/home/project/jre1.8.0_144
+export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export PATH=$PATH:$JAVA_HOME/bin
+```
+* 然后让它生效
+```
+# source ~/.bashrc
+```
+
+#### Android SDK环境
+* 在官方网站下载Command line tools only工具，[地址](https://developer.android.com/studio/#downloads)
+```
+# mkdir -p /home/project/android/cmdline-tools
+# cd /home/project/android/cmdline-tools
+# wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
+# unzip commandlinetools-linux-6609375_latest.zip 
+```
+* 设置环境变量，修改～/.bashrc
+```
+export ANDROID_SDK_ROOT=/home/project/android
+```
+* 然后让它生效
+```
+# source ~/.bashrc
+```
+* 安装android-sdk
+```
+# cd /home/project/android/cmdline-tools
+# ./tools/bin/sdkmanager  "build-tools;28.0.3"  "platform-tools"  "platforms;android-28"
+```
+
+#### Android NDK环境
+* 在官方网站下载NDK，[地址](https://developer.android.com/ndk/downloads/index.html)
+```
+# wget https://dl.google.com/android/repository/android-ndk-r21b-linux-x86_64.zip
+# unzip android-ndk-r21b-linux-x86_64.zip
+# mv android-ndk-r21b /home/project
+```
+* 设置环境变量，修改～/.bashrc
+```
+export ANDROID_NDK_HOME=/home/project/android-ndk-r21b
+```
+* 然后让它生效
+```
+# source ~/.bashrc
+```
+
+#### 编译插件
+* 编译spp-shadowsocks-plugin到Android各个架构，使用./pack_android.sh
+```
+# ./pack_android.sh
+```
+
+# 使用
+### 非Android平台
+* 下载shadowsocks的go版本[go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) 然后解压，放到和spp-shadowsocks-plugin同级目录
+```
+# gunzip shadowsocks2-linux.gz
 ```
 * 执行shadowsocks2-linux客户端，附带spp-shadowsocks-plugin插件，采用rudp协议
 ```
@@ -32,3 +113,5 @@ The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
 ```
+### Android平台
+* 使用shadowsocks插件
