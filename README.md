@@ -1,5 +1,5 @@
 # spp-shadowsocks-plugin
-spp针对shadowsocks的插件
+[spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
 
 # 使用
 * 下载shadowsocks的go版本[go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) 然后解压
