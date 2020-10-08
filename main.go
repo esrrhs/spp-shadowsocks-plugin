@@ -77,9 +77,6 @@ func parseArgs() Args {
 		for k, v := range other_opts {
 			opts[k] = v
 		}
-	} else {
-		loggo.Info("need SS_PLUGIN_OPTIONS")
-		os.Exit(-6)
 	}
 
 	return opts
@@ -144,8 +141,7 @@ func main() {
 	if len(proto) > 0 {
 		protos = append(protos, proto[0])
 	} else {
-		loggo.Info("need SS_PLUGIN_OPTIONS proto, eg: proto=tcp")
-		os.Exit(-9)
+		protos = append(protos, "tcp")
 	}
 
 	ty := opts["type"]
@@ -155,7 +151,7 @@ func main() {
 			loggo.Info("NewServer fail %v", err)
 			os.Exit(-8)
 		}
-	} else if len(ty) > 0 && ty[0] == "client" {
+	} else {
 		_, err := proxy.NewClient(config, protos[0], opts["remoteAddr"][0]+":"+opts["remotePort"][0], common.UniqueId(),
 			"ss_proxy",
 			[]string{"tcp"}, []string{opts["localAddr"][0] + ":" + opts["localPort"][0]}, []string{""})
@@ -164,9 +160,6 @@ func main() {
 			os.Exit(-10)
 		}
 		loggo.Info("Client start")
-	} else {
-		loggo.Info("need SS_PLUGIN_OPTIONS type, eg: type=client")
-		os.Exit(-11)
 	}
 
 	profile := opts["profile"]
