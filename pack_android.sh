@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -x
+
 TOOLCHAIN=$(find $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/* -maxdepth 1 -type d -print -quit)/bin
 echo $TOOLCHAIN
 MIN_API=21
