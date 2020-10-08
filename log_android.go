@@ -28,7 +28,7 @@ import "C"
 
 import (
 	"bufio"
-	"log"
+	"github.com/esrrhs/go-engine/src/loggo"
 	"os"
 	"unsafe"
 )
@@ -65,9 +65,7 @@ func lineLog(f *os.File, priority C.int) {
 }
 
 func log_init() {
-	log.SetOutput(infoWriter{})
-	// android logcat includes all of log.LstdFlags
-	log.SetFlags(log.Flags() &^ log.LstdFlags)
+	loggo.SetPrinter(infoWriter{})
 
 	r, w, err := os.Pipe()
 	if err != nil {

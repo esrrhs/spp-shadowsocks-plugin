@@ -6,7 +6,6 @@ import (
 	"github.com/esrrhs/go-engine/src/common"
 	"github.com/esrrhs/go-engine/src/loggo"
 	"github.com/esrrhs/go-engine/src/proxy"
-	"log"
 	"os"
 	"reflect"
 	"strconv"
@@ -15,14 +14,6 @@ import (
 )
 
 func main() {
-	loggo.Ini(loggo.Config{
-		Level:     loggo.LEVEL_INFO,
-		Prefix:    "spp",
-		MaxDay:    3,
-		NoLogFile: true,
-		NoPrint:   false,
-	})
-
 	usage := ""
 
 	config := proxy.DefaultConfig()
@@ -40,30 +31,38 @@ func main() {
 	}
 
 	flag.Usage = func() {
-		fmt.Printf(usage)
+		fmt.Println(usage)
 	}
 	v := flag.Bool("V", false, "")
 	flag.Parse()
 
+	loggo.Ini(loggo.Config{
+		Level:     loggo.LEVEL_INFO,
+		Prefix:    "spp",
+		MaxDay:    3,
+		NoLogFile: true,
+		NoPrint:   false,
+	})
+
 	log_init()
 
-	log.Printf("start plugin")
+	loggo.Info("start plugin")
 
-	log.Printf("vpn mode %v", *v)
+	loggo.Info("vpn mode %v", *v)
 
-	log.Printf("parse env")
+	loggo.Info("parse env")
 	opts, err := parseEnv()
 	if err != nil {
-		log.Printf("parseEnv fail %v", err)
+		loggo.Error("parseEnv fail %v", err)
 		os.Exit(-11)
 	}
 
 	remoteaddr, _ := opts.Get(strings.ToLower("remoteaddr"))
 	localaddr, _ := opts.Get(strings.ToLower("localaddr"))
-	log.Printf("remoteaddr %v", remoteaddr)
-	log.Printf("localaddr %v", localaddr)
+	loggo.Info("remoteaddr %v", remoteaddr)
+	loggo.Info("localaddr %v", localaddr)
 
-	log.Printf("set config")
+	loggo.Info("set config")
 	for i := 0; i < ss.NumField(); i++ {
 		name := typeOfT.Field(i).Name
 		if value, b := opts.Get(strings.ToLower(name)); b {
@@ -72,15 +71,15 @@ func main() {
 					x, _ := strconv.Atoi(value)
 					if !ss.Field(i).OverflowInt(int64(x)) {
 						ss.Field(i).SetInt(int64(x))
-						log.Printf("%v = %v", name, x)
+						loggo.Info("%v = %v", name, x)
 					}
 				} else if ss.Field(i).Kind() == reflect.String {
 					ss.Field(i).SetString(value)
-					log.Printf("%v = %v", name, value)
+					loggo.Info("%v = %v", name, value)
 				} else if ss.Field(i).Kind() == reflect.Bool {
 					x := value == "true"
 					ss.Field(i).SetBool(x)
-					log.Printf("%v = %v", name, x)
+					loggo.Info("%v = %v", name, x)
 				}
 			}
 		}
@@ -92,29 +91,29 @@ func main() {
 	} else {
 		protos = append(protos, "tcp")
 	}
-	log.Printf("protos %v", protos)
+	loggo.Info("protos %v", protos)
 
 	go parentMonitor(3)
 
 	ty, _ := opts.Get("type")
 	if len(ty) > 0 && ty == "server" {
-		log.Printf("start server")
+		loggo.Info("start server")
 		_, err := proxy.NewServer(config, protos, []string{remoteaddr})
 		if err != nil {
-			log.Printf("NewServer fail %v", err)
+			loggo.Error("NewServer fail %v", err)
 			os.Exit(-12)
 		}
-		log.Printf("start server ok")
+		loggo.Info("start server ok")
 	} else {
-		log.Printf("start client")
+		loggo.Info("start client")
 		_, err := proxy.NewClient(config, protos[0], remoteaddr, common.UniqueId(),
 			"ss_proxy",
 			[]string{"tcp"}, []string{localaddr}, []string{""})
 		if err != nil {
-			log.Printf("NewClient fail %v", err)
+			loggo.Error("NewClient fail %v", err)
 			os.Exit(-13)
 		}
-		log.Printf("start client ok")
+		loggo.Info("start client ok")
 	}
 
 	for {
