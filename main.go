@@ -56,6 +56,10 @@ func parseArgs() Args {
 	opts.Add("remotePort", ss_remote_port)
 	opts.Add("localAddr", ss_local_host)
 	opts.Add("localPort", ss_local_port)
+	fmt.Printf("remoteAddr = %v", ss_remote_host)
+	fmt.Printf("remotePort = %v", ss_remote_port)
+	fmt.Printf("localAddr = %v", ss_local_host)
+	fmt.Printf("localPort = %v", ss_local_port)
 
 	ss_plugin_options := os.Getenv("SS_PLUGIN_OPTIONS")
 	if len(ss_plugin_options) > 0 {
