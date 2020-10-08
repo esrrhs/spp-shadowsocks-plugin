@@ -9,6 +9,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"reflect"
 	sort "sort"
 	"strconv"
 	"strings"
@@ -40,15 +41,19 @@ func parseArgs() Args {
 	ss_local_host := os.Getenv("SS_LOCAL_HOST")
 	ss_local_port := os.Getenv("SS_LOCAL_PORT")
 	if len(ss_remote_host) == 0 {
+		loggo.Info("need ss_remote_host")
 		os.Exit(-1)
 	}
 	if len(ss_remote_port) == 0 {
+		loggo.Info("need ss_remote_port")
 		os.Exit(-2)
 	}
 	if len(ss_local_host) == 0 {
+		loggo.Info("need ss_local_host")
 		os.Exit(-3)
 	}
 	if len(ss_local_port) == 0 {
+		loggo.Info("need ss_local_port")
 		os.Exit(-4)
 	}
 
@@ -56,21 +61,23 @@ func parseArgs() Args {
 	opts.Add("remotePort", ss_remote_port)
 	opts.Add("localAddr", ss_local_host)
 	opts.Add("localPort", ss_local_port)
-	fmt.Printf("remoteAddr = %v", ss_remote_host)
-	fmt.Printf("remotePort = %v", ss_remote_port)
-	fmt.Printf("localAddr = %v", ss_local_host)
-	fmt.Printf("localPort = %v", ss_local_port)
+	loggo.Info("remoteAddr = %v", ss_remote_host)
+	loggo.Info("remotePort = %v", ss_remote_port)
+	loggo.Info("localAddr = %v", ss_local_host)
+	loggo.Info("localPort = %v", ss_local_port)
 
 	ss_plugin_options := os.Getenv("SS_PLUGIN_OPTIONS")
 	if len(ss_plugin_options) > 0 {
 		other_opts, err := parsePluginOptions(ss_plugin_options)
 		if err != nil {
+			loggo.Info("parse SS_PLUGIN_OPTIONS fail %v", err)
 			os.Exit(-5)
 		}
 		for k, v := range other_opts {
 			opts[k] = v
 		}
 	} else {
+		loggo.Info("need SS_PLUGIN_OPTIONS")
 		os.Exit(-6)
 	}
 
@@ -81,67 +88,65 @@ func main() {
 	opts := parseArgs()
 
 	loggo.Ini(loggo.Config{
-		Level:     loggo.LEVEL_ERROR,
+		Level:     loggo.LEVEL_INFO,
 		Prefix:    "spp",
 		MaxDay:    3,
 		NoLogFile: true,
-		NoPrint:   true,
+		NoPrint:   false,
 	})
 
 	config := proxy.DefaultConfig()
-	compress := opts["compress"]
-	if len(compress) > 0 {
-		config.Compress, _ = strconv.Atoi(compress[0])
+	ss := reflect.ValueOf(config).Elem()
+	typeOfT := ss.Type()
+
+	for i := 0; i < ss.NumField(); i++ {
+		name := typeOfT.Field(i).Name
+		value := opts[strings.ToLower(name)]
+		if len(value) > 0 && ss.Field(i).IsValid() && ss.Field(i).CanSet() {
+			if ss.Field(i).Kind() == reflect.Int {
+				x, _ := strconv.Atoi(value[0])
+				if !ss.Field(i).OverflowInt(int64(x)) {
+					ss.Field(i).SetInt(int64(x))
+					loggo.Info("%v = %v", name, x)
+				}
+			} else if ss.Field(i).Kind() == reflect.String {
+				ss.Field(i).SetString(value[0])
+				loggo.Info("%v = %v", name, value[0])
+			} else if ss.Field(i).Kind() == reflect.Bool {
+				x, _ := strconv.Atoi(value[0])
+				ss.Field(i).SetBool(x > 0)
+				loggo.Info("%v = %v", name, x > 0)
+			}
+		}
 	}
-	key := opts["key"]
-	if len(key) > 0 {
-		config.Key = key[0]
-	}
-	encrypt := opts["encrypt"]
-	if len(encrypt) > 0 {
-		config.Encrypt = encrypt[0]
-	}
-	config.ShowPing = false
-	maxclient := opts["maxclient"]
-	if len(maxclient) > 0 {
-		config.MaxClient, _ = strconv.Atoi(maxclient[0])
-	}
-	maxconn := opts["maxconn"]
-	if len(maxclient) > 0 {
-		config.MaxSonny, _ = strconv.Atoi(maxconn[0])
-	}
+
 	var protos []string
 	proto := opts["proto"]
 	if len(proto) > 0 {
 		protos = append(protos, proto[0])
+	} else {
+		loggo.Info("need SS_PLUGIN_OPTIONS proto, eg: proto=tcp")
+		os.Exit(-9)
 	}
 
 	ty := opts["type"]
 	if len(ty) > 0 && ty[0] == "server" {
-		var listenaddrs []string
-		listenaddr := opts["listenaddr"]
-		if len(listenaddr) > 0 {
-			listenaddrs = append(listenaddrs, listenaddr[0])
-		} else {
-			os.Exit(-7)
-		}
-		_, err := proxy.NewServer(config, protos, listenaddrs)
+		_, err := proxy.NewServer(config, protos, []string{opts["remoteAddr"][0] + ":" + opts["remotePort"][0]})
 		if err != nil {
+			loggo.Info("NewServer fail %v", err)
 			os.Exit(-8)
 		}
 	} else if len(ty) > 0 && ty[0] == "client" {
-		server := opts["server"]
-		if len(server) <= 0 {
-			os.Exit(-9)
-		}
-		_, err := proxy.NewClient(config, protos[0], server[0], common.UniqueId(),
-			"proxy_client",
-			[]string{"tcp"}, []string{opts["localAddr"][0] + ":" + opts["localPort"][0]}, []string{opts["remoteAddr"][0] + ":" + opts["remotePort"][0]})
+		_, err := proxy.NewClient(config, protos[0], opts["remoteAddr"][0]+":"+opts["remotePort"][0], common.UniqueId(),
+			"ss_proxy",
+			[]string{"tcp"}, []string{opts["localAddr"][0] + ":" + opts["localPort"][0]}, []string{""})
 		if err != nil {
+			loggo.Info("NewClient fail %v", err)
 			os.Exit(-10)
 		}
 		loggo.Info("Client start")
 	} else {
+		loggo.Info("need SS_PLUGIN_OPTIONS type, eg: type=client")
 		os.Exit(-11)
 	}
 
