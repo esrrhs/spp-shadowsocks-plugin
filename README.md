@@ -114,4 +114,4 @@ The document has moved
 </BODY></HTML>
 ```
 ### Android平台
-* 使用shadowsocks插件
+* 客户端使用shadowsocks插件，[spp-shadowsocks-plugin-android](https://github.com/esrrhs/spp-shadowsocks-plugin-android)
