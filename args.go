@@ -88,11 +88,13 @@ func parseEnv() (opts Args, err error) {
 	} else {
 		opts.Add("remoteaddr", ss_remote_host+":"+ss_remote_port)
 	}
+	opts.Add("remotehost", ss_remote_host)
 	if isIPv6(ss_local_host) {
 		opts.Add("localaddr", "["+ss_local_host+"]:"+ss_local_port)
 	} else {
 		opts.Add("localaddr", ss_local_host+":"+ss_local_port)
 	}
+	opts.Add("localhost", ss_local_host)
 	ss_plugin_options := os.Getenv("SS_PLUGIN_OPTIONS")
 	if len(ss_plugin_options) > 0 {
 		other_opts, err := parsePluginOptions(ss_plugin_options)

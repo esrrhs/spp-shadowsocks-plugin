@@ -59,8 +59,12 @@ func main() {
 
 	remoteaddr, _ := opts.Get(strings.ToLower("remoteaddr"))
 	localaddr, _ := opts.Get(strings.ToLower("localaddr"))
+	remotehost, _ := opts.Get(strings.ToLower("remotehost"))
+	localhost, _ := opts.Get(strings.ToLower("localhost"))
 	loggo.Info("remoteaddr %v", remoteaddr)
 	loggo.Info("localaddr %v", localaddr)
+	loggo.Info("remotehost %v", remotehost)
+	loggo.Info("localhost %v", localhost)
 
 	loggo.Info("set config")
 	for i := 0; i < ss.NumField(); i++ {
@@ -99,10 +103,15 @@ func main() {
 
 	go parentMonitor(3)
 
+	addr := remoteaddr
+	if protos[0] == "ricmp" {
+		addr = remotehost
+	}
+
 	ty, _ := opts.Get("type")
 	if len(ty) > 0 && ty == "server" {
 		loggo.Info("start server")
-		_, err := proxy.NewServer(config, protos, []string{remoteaddr})
+		_, err := proxy.NewServer(config, protos, []string{addr})
 		if err != nil {
 			loggo.Error("NewServer fail %v", err)
 			os.Exit(-12)
@@ -110,7 +119,7 @@ func main() {
 		loggo.Info("start server ok")
 	} else {
 		loggo.Info("start client")
-		_, err := proxy.NewClient(config, protos[0], remoteaddr, common.UniqueId(),
+		_, err := proxy.NewClient(config, protos[0], addr, common.UniqueId(),
 			"ss_proxy",
 			[]string{"tcp"}, []string{localaddr}, []string{""})
 		if err != nil {
