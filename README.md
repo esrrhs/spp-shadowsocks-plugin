@@ -11,6 +11,11 @@
      |  SS Server +-- Local Loopback --+  Plugin Server (Tunnel)   +--+
      +------------+                    +---------------------------+
 ```
+
+# 特性
+* 支持协议tcp、kcp、quic
+* 支持自定义协议rudp、rhttp、ricmp（非root手机不支持）
+
 # 编译
 ### 编译到非Android平台
 ```
