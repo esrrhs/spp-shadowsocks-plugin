@@ -101,9 +101,9 @@ export ANDROID_NDK_HOME=/home/project/android-ndk-r21b
 ```
 # ./shadowsocks2-linux -c 'ss://AEAD_CHACHA20_POLY1305:your-password@127.0.0.1:8488' -verbose --plugin spp-shadowsocks-plugin --plugin-opts "proto=rudp" -socks :1080 
 ```
-* 执行shadowsocks2-linux服务端，同样附带spp-shadowsocks-plugin插件，采用rudp协议
+* 执行shadowsocks2-linux服务端，同样附带spp-shadowsocks-plugin插件，采用rudp协议，只不过加一个type=server表明是服务器
 ```
-# ./shadowsocks2-linux -s 'ss://AEAD_CHACHA20_POLY1305:your-password@:8488' -verbose --plugin spp-shadowsocks-plugin --plugin-opts "proto=rudp"
+# ./shadowsocks2-linux -s 'ss://AEAD_CHACHA20_POLY1305:your-password@:8488' -verbose --plugin spp-shadowsocks-plugin --plugin-opts "type=server;proto=rudp"
 ```
 * 完成，现在以socks5协议访问本地1080端口即可
 ```
