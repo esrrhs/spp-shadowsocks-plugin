@@ -14,7 +14,7 @@
 
 # 特性
 * 支持协议tcp、kcp、quic，自定义协议rudp、rhttp、ricmp
-* 支持加密压缩
+* 支持加密压缩，默认关闭
 * 支持Shadowsocks Android插件，[spp-shadowsocks-plugin-android](https://github.com/esrrhs/spp-shadowsocks-plugin-android)
 
 # 编译
