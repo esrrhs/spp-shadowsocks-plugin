@@ -1,5 +1,5 @@
 # spp-shadowsocks-plugin
-[spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
+[spp](https://github.com/esrrhs/spp)针对shadowsocks的插件，使用[go-engine conn](https://github.com/esrrhs/go-engine/tree/master/src/conn)做转发
 ```
      +------------+                    +---------------------------+
      |  SS Client +-- Local Loopback --+  Plugin Client (Tunnel)   +--+
