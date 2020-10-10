@@ -19,6 +19,9 @@ func main() {
 	config := proxy.DefaultConfig()
 	config.Compress = 0
 	config.Encrypt = ""
+	config.PingInter = 10
+	config.MaxMsgSize = 10 * 1024
+	config.MaxClient = 128
 	ss := reflect.ValueOf(config).Elem()
 	typeOfT := ss.Type()
 	for i := 0; i < ss.NumField(); i++ {
