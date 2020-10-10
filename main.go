@@ -117,11 +117,11 @@ func main() {
 	}
 }
 
-func process(proto string, remoteaddr string, c conn.Conn) {
+func process(proto string, remoteaddr string, src conn.Conn) {
 
 	defer common.CrashLog()
 
-	loggo.Info("process begin %s %s %s", proto, remoteaddr, c.Info())
+	loggo.Info("process begin %s %s %s", proto, remoteaddr, src.Info())
 
 	c, err := conn.NewConn(proto)
 	if err != nil {
@@ -129,22 +129,22 @@ func process(proto string, remoteaddr string, c conn.Conn) {
 		os.Exit(-41)
 	}
 
-	pc, err := c.Dial(remoteaddr)
+	dstc, err := c.Dial(remoteaddr)
 	if err != nil {
 		loggo.Error("process Dial fail %v", err)
 		return
 	}
 
 	errCh := make(chan error, 2)
-	go proxy(c, pc, c.Info(), pc.Info(), errCh)
-	go proxy(pc, c, pc.Info(), c.Info(), errCh)
+	go proxy(src, dstc, src.Info(), dstc.Info(), errCh)
+	go proxy(dstc, src, dstc.Info(), src.Info(), errCh)
 
 	for i := 0; i < 2; i++ {
 		<-errCh
 	}
 
-	c.Close()
-	pc.Close()
+	src.Close()
+	dstc.Close()
 
 	loggo.Info("process end %s %s %s", proto, remoteaddr, c.Info())
 }
