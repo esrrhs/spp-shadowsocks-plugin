@@ -68,13 +68,13 @@ func main() {
 		c, err := conn.NewConn(protos[0])
 		if err != nil {
 			loggo.Error("NewConn fail %v", err)
-			os.Exit(-12)
+			os.Exit(-21)
 		}
 
 		lc, err := c.Listen(remoteaddr)
 		if err != nil {
 			loggo.Error("Listen fail %v", err)
-			os.Exit(-12)
+			os.Exit(-22)
 		}
 
 		loggo.Info("start server ok")
@@ -94,13 +94,13 @@ func main() {
 		c, err := conn.NewConn("tcp")
 		if err != nil {
 			loggo.Error("NewConn fail %v", err)
-			os.Exit(-12)
+			os.Exit(-31)
 		}
 
 		lc, err := c.Listen(localaddr)
 		if err != nil {
 			loggo.Error("Listen fail %v", err)
-			os.Exit(-12)
+			os.Exit(-32)
 		}
 
 		loggo.Info("start client ok")
@@ -126,7 +126,7 @@ func process(proto string, remoteaddr string, c conn.Conn) {
 	c, err := conn.NewConn(proto)
 	if err != nil {
 		loggo.Error("process NewConn fail %v", err)
-		os.Exit(-12)
+		os.Exit(-41)
 	}
 
 	pc, err := c.Dial(remoteaddr)
@@ -165,7 +165,7 @@ func parentMonitor(interval int) {
 		case <-ticker.C:
 			curpid := os.Getppid()
 			if curpid != pid {
-				os.Exit(1)
+				os.Exit(-51)
 			}
 		}
 	}
