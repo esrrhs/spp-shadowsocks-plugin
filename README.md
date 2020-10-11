@@ -29,16 +29,13 @@
 
 ### 编译到Android平台
 #### 准备Java环境
-* 下载Java，解压到某个目录
+* 安装jdk
 ```
-# wget http://javadl.oracle.com/webapps/download/AutoDL?BundleId=225345_090f390dda5b47b9b721c7dfaa008135 -O  jre-8u144-linux-x64.tar.gz
-# tar zxvf jre-8u144-linux-x64.tar.gz
-# mkdir -p /home/project/
-# mv jre1.8.0_144 /home/project/
+# yum install java-1.8.0-openjdk-devel -y
 ```
 * 设置环境变量，修改～/.bashrc
 ```
-export JAVA_HOME=/home/project/jre1.8.0_144
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk/
 export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 export PATH=$PATH:$JAVA_HOME/bin
 ```
