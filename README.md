@@ -5,7 +5,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/esrrhs/spp-shadowsocks-plugin)](https://goreportcard.com/report/github.com/esrrhs/spp-shadowsocks-plugin)
 [<img src="https://img.shields.io/github/v/release/esrrhs/spp-shadowsocks-plugin">](https://github.com/esrrhs/spp-shadowsocks-plugin/releases)
 [<img src="https://img.shields.io/github/downloads/esrrhs/spp-shadowsocks-plugin/total">](https://github.com/esrrhs/spp-shadowsocks-plugin/releases)
-[<img src="https://img.shields.io/docker/pulls/esrrhs/spp-shadowsocks-plugin">](https://hub.docker.com/repository/docker/esrrhs/spp-shadowsocks-plugin)
 [<img src="https://img.shields.io/github/workflow/status/esrrhs/spp-shadowsocks-plugin/Go">](https://github.com/esrrhs/spp-shadowsocks-plugin/actions)
 
 [spp](https://github.com/esrrhs/spp)针对shadowsocks的插件
