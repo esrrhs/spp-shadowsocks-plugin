@@ -15,6 +15,15 @@ for line in $build_list; do
   os=$(echo "$line" | awk -F"/" '{print $1}')
   arch=$(echo "$line" | awk -F"/" '{print $2}')
   echo "os="$os" arch="$arch" start build"
+  if [ $os == "android" ]; then
+    continue
+  fi
+  if [ $os == "ios" ]; then
+    continue
+  fi
+  if [ $arch == "wasm" ]; then
+    continue
+  fi
   CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -ldflags="-s -w"
   if [ $? -ne 0 ]; then
     echo "os="$os" arch="$arch" build fail"
