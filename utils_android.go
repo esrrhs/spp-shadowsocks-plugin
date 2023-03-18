@@ -1,3 +1,4 @@
+//go:build android
 // +build android
 
 package main
@@ -67,7 +68,7 @@ set_timeout(int sock)
 import "C"
 
 import (
-	"github.com/esrrhs/go-engine/src/conn"
+	"github.com/esrrhs/gohome/conn"
 	"log"
 	"syscall"
 )
