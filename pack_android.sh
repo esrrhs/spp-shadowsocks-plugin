@@ -4,7 +4,7 @@ set -x
 
 TOOLCHAIN=$(find $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/* -maxdepth 1 -type d -print -quit)/bin
 echo $TOOLCHAIN
-MIN_API=21
+MIN_API=35
 
 env CGO_ENABLED=1 CC=$TOOLCHAIN/armv7a-linux-androideabi${MIN_API}-clang GOOS=android GOARCH=arm GOARM=7 go build -ldflags="-s -w"
 zip spp-shadowsocks-plugin_android_arm7.zip spp-shadowsocks-plugin
