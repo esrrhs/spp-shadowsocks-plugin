@@ -68,7 +68,7 @@ set_timeout(int sock)
 import "C"
 
 import (
-	"github.com/esrrhs/gohome/conn"
+	"github.com/esrrhs/gohome/network"
 	"log"
 	"syscall"
 )
@@ -116,5 +116,5 @@ func ControlOnConnSetup(network string, address string, c syscall.RawConn) error
 }
 
 func registerControlFunc() {
-	conn.RegisterDialerController(ControlOnConnSetup)
+	network.RegisterDialerController(ControlOnConnSetup)
 }
