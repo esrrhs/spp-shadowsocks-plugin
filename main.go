@@ -3,14 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/esrrhs/gohome/common"
-	"github.com/esrrhs/gohome/loggo"
-	"github.com/esrrhs/spp/proxy"
 	"os"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/esrrhs/gohome/common"
+	"github.com/esrrhs/gohome/loggo"
+	"github.com/esrrhs/spp-shadowsocks-plugin/version"
+	"github.com/esrrhs/spp/proxy"
 )
 
 func main() {
@@ -38,8 +40,15 @@ func main() {
 	flag.Usage = func() {
 		fmt.Println(usage)
 	}
-	vpn := flag.Bool("V", false, "")
+	showVersion := flag.Bool("version", false, "show version")
+	showVersionShort := flag.Bool("v", false, "show version")
+	vpn := flag.Bool("V", false, "vpn mode (also enabled via __android_vpn option)")
 	flag.Parse()
+
+	if *showVersion || *showVersionShort {
+		fmt.Println(version.Full())
+		return
+	}
 
 	loggo.Ini(loggo.Config{
 		Level:     loggo.LEVEL_INFO,
@@ -51,9 +60,7 @@ func main() {
 
 	log_init()
 
-	loggo.Info("start plugin")
-
-	loggo.Info("vpn mode %v", *vpn)
+	loggo.Info("start %s", version.Short())
 
 	loggo.Info("parse env")
 	opts, err := parseEnv()
@@ -61,6 +68,12 @@ func main() {
 		loggo.Error("parseEnv fail %v", err)
 		os.Exit(-11)
 	}
+
+	isVpn := *vpn
+	if _, ok := opts.Get("__android_vpn"); ok {
+		isVpn = true
+	}
+	loggo.Info("vpn mode %v", isVpn)
 
 	remoteaddr, _ := opts.Get(strings.ToLower("remoteaddr"))
 	localaddr, _ := opts.Get(strings.ToLower("localaddr"))
@@ -96,20 +109,20 @@ func main() {
 
 	var protos []string
 	if value, b := opts.Get("proto"); b {
-		protos = append(protos, value)
+		protos = append(protos, strings.Split(value, ",")...)
 	} else {
 		protos = append(protos, "tcp")
 	}
 	loggo.Info("protos %v", protos)
 
-	if *vpn {
+	if isVpn {
 		registerControlFunc()
 	}
 
 	go parentMonitor(3)
 
 	addr := remoteaddr
-	if protos[0] == "ricmp" {
+	if len(protos) > 0 && protos[0] == "ricmp" {
 		addr = remotehost
 	}
 
@@ -124,7 +137,7 @@ func main() {
 		loggo.Info("start server ok")
 	} else {
 		loggo.Info("start client")
-		_, err := proxy.NewClient(config, protos[0], addr, common.UniqueId(),
+		_, err := proxy.NewClient(config, protos, []string{addr}, common.UniqueId(),
 			"ss_proxy",
 			[]string{"tcp"}, []string{localaddr}, []string{""})
 		if err != nil {
