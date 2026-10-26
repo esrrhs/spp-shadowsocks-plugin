@@ -10,7 +10,7 @@ BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 TOOLCHAIN=$(find $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/* -maxdepth 1 -type d -print -quit)/bin
 echo "Toolchain: $TOOLCHAIN"
-MIN_API=35
+MIN_API=24
 LDFLAGS="-s -w -extldflags=-Wl,-z,max-page-size=16384 -X 'github.com/esrrhs/spp-shadowsocks-plugin/version.Version=${VERSION}' -X 'github.com/esrrhs/spp-shadowsocks-plugin/version.GitCommit=${GIT_COMMIT}' -X 'github.com/esrrhs/spp-shadowsocks-plugin/version.BuildTime=${BUILD_TIME}'"
 
 rm -f spp-shadowsocks-plugin_android_arm7.zip

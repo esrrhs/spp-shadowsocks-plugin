@@ -23,7 +23,6 @@ func main() {
 	config.Encrypt = ""
 	config.PingInter = 10
 	config.MaxMsgSize = 10 * 1024
-	config.MaxClient = 128
 	ss := reflect.ValueOf(config).Elem()
 	typeOfT := ss.Type()
 	for i := 0; i < ss.NumField(); i++ {
@@ -137,7 +136,11 @@ func main() {
 		loggo.Info("start server ok")
 	} else {
 		loggo.Info("start client")
-		_, err := proxy.NewClient(config, protos, []string{addr}, common.UniqueId(),
+		proto := "tcp"
+		if len(protos) > 0 {
+			proto = protos[0]
+		}
+		_, err := proxy.NewClient(config, proto, addr, common.UniqueId(),
 			"ss_proxy",
 			[]string{"tcp"}, []string{localaddr}, []string{""})
 		if err != nil {
